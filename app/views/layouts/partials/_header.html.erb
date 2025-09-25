@@ -20,16 +20,11 @@
             <div class="absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden z-20">
               <ul class="py-1 text-sm">
                 <% if current_user.admin? %>
-                  <li>
-                    <%= link_to "Admin", root_path, class: "block px-4 py-2 hover:bg-gray-50" %>
-                  </li>
+                  <li> <%= link_to "Admin", root_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
                 <% end %>
-                <li>
-                  <%= link_to "Profile", edit_user_registration_path, class: "block px-4 py-2 hover:bg-gray-50" %>
-                </li>
-                <li>
-                  <%= link_to "Logout", destroy_user_session_path, class: "block px-4 py-2 hover:bg-gray-50", data: { turbo_method: :delete } %>
-                </li>
+                <li> <%= link_to "Swagger", grape_swagger_rails_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
+                <li> <%= link_to "Profile", edit_user_registration_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
+                <li> <%= link_to "Logout", destroy_user_session_path, class: "block px-4 py-2 hover:bg-gray-50", data: { turbo_method: :delete } %> </li>
               </ul>
             </div>
           </details>

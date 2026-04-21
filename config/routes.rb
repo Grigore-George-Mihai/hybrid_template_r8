@@ -6,6 +6,11 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  devise_scope :user do
+    get "/profile", to: "devise/registrations#edit", as: :profile
+    delete "/logout", to: "devise/sessions#destroy", as: :logout
+  end
+
   # Mount Sidekiq
   authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => "/sidekiq"

@@ -11,6 +11,9 @@ RSpec.describe ApplicationHelper, type: :helper do
       error: "bg-red-100",
       warning: "bg-yellow-100",
       info: "bg-blue-100",
+      primary: "bg-indigo-100",
+      secondary: "bg-gray-100",
+      danger: "bg-red-100",
       unknown: "bg-gray-100"
     }.each do |flash_type, expected_prefix|
       it "returns a class string starting with '#{expected_prefix}' for :#{flash_type}" do

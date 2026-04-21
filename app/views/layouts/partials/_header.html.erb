@@ -2,63 +2,86 @@
   <nav class="container mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between">
       <!-- Brand -->
-      <div>
-        <%= link_to "MyApp", root_path, class: "text-lg font-semibold tracking-tight hover:text-gray-700" %>
-      </div>
-
-      <!-- Desktop nav -->
-      <div class="hidden md:flex items-center gap-6">
-        <%= link_to "Home", root_path, class: "text-sm font-medium hover:text-indigo-600 transition" %>
-
+      <div class="flex items-center gap-2">
+        <%= link_to root_path, class: "inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700", aria: { label: "Home" } do %>
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12 12 3l9 9"/>
+            <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>
+          </svg>
+        <% end %>
         <% if user_signed_in? %>
-          <!-- Desktop dropdown (no JS) -->
-          <details class="relative">
-            <summary class="list-none cursor-pointer select-none inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100">
-              Options
-              <i class="fa-solid fa-chevron-down text-gray-500 text-xs" aria-hidden="true"></i>
-            </summary>
-            <div class="absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden z-20">
-              <ul class="py-1 text-sm">
-                <% if current_user.admin? %>
-                  <li> <%= link_to "Admin", root_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
-                <% end %>
-                <li> <%= link_to "Swagger", grape_swagger_rails_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
-                <li> <%= link_to "Profile", edit_user_registration_path, class: "block px-4 py-2 hover:bg-gray-50" %> </li>
-                <li> <%= link_to "Logout", destroy_user_session_path, class: "block px-4 py-2 hover:bg-gray-50", data: { turbo_method: :delete } %> </li>
-              </ul>
-            </div>
-          </details>
+          <%= link_to "Home", root_path, class: "text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
         <% end %>
       </div>
 
-      <!-- Mobile menu toggle -->
-      <details class="md:hidden">
-        <summary class="list-none inline-flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <span class="sr-only">Open main menu</span>
-          <i class="fa-solid fa-bars text-gray-700 text-xl" aria-hidden="true"></i>
-        </summary>
-
-        <!-- Mobile menu panel -->
-        <div class="mt-2 bg-white border rounded-xl shadow-sm overflow-hidden">
-          <nav class="px-2 py-3">
-            <%= link_to "Home", root_path,
-                        class: "block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-100" %>
-          </nav>
-
-          <% if user_signed_in? %>
-            <div class="border-t px-2 py-3">
-              <p class="px-1 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">Options</p>
-              <nav class="space-y-1">
-                <% if current_user.admin? %>
-                  <%= link_to "Admin", root_path, class: "block rounded-md px-3 py-2 hover:bg-gray-100" %>
-                <% end %>
-                <%= link_to "Profile", edit_user_registration_path, class: "block rounded-md px-3 py-2 hover:bg-gray-100" %>
-                <%= link_to "Logout", destroy_user_session_path, class: "block rounded-md px-3 py-2 hover:bg-gray-100", data: { turbo_method: :delete } %>
-              </nav>
-            </div>
+      <% if user_signed_in? %>
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center gap-2">
+          <% if current_user.admin? %>
+            <details class="relative group" data-controller="base--dropdown" data-action="toggle->base--dropdown#closeOthers">
+              <summary class="list-none cursor-pointer select-none inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                Admin
+                <svg class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </summary>
+              <div class="absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden z-20">
+                <ul class="py-1 text-sm">
+                  <li><%= link_to "Swagger", "/swagger", target: "_blank", rel: "noopener", class: "block px-4 py-2 text-gray-700 hover:bg-gray-50" %></li>
+                  <li><%= link_to "Sidekiq", "/sidekiq", target: "_blank", rel: "noopener", class: "block px-4 py-2 text-gray-700 hover:bg-gray-50" %></li>
+                  <li><%= link_to "PgHero", "/pghero", target: "_blank", rel: "noopener", class: "block px-4 py-2 text-gray-700 hover:bg-gray-50" %></li>
+                </ul>
+              </div>
+            </details>
           <% end %>
+
+          <details class="relative group" data-controller="base--dropdown" data-action="toggle->base--dropdown#closeOthers">
+            <summary class="list-none cursor-pointer select-none inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+              Account
+              <svg class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </summary>
+            <div class="absolute right-0 mt-2 w-48 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden z-20">
+              <ul class="py-1 text-sm">
+                <li><%= link_to "Profile", profile_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-50" %></li>
+                <li>
+                  <%= button_to "Log out", logout_path, method: :delete,
+                                class: "block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50",
+                                form: { class: "inline-block w-full" } %>
+                </li>
+              </ul>
+            </div>
+          </details>
         </div>
-      </details>
+
+        <!-- Mobile menu toggle -->
+        <details class="md:hidden relative">
+          <summary class="list-none inline-flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <span class="sr-only">Open main menu</span>
+            <svg class="h-6 w-6 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 bg-white border rounded-xl shadow-lg overflow-hidden z-20">
+            <% if current_user.admin? %>
+              <div class="px-2 py-3 border-b">
+                <p class="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wide">Admin</p>
+                <%= link_to "Swagger", "/swagger", target: "_blank", rel: "noopener", class: "block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+                <%= link_to "Sidekiq", "/sidekiq", target: "_blank", rel: "noopener", class: "block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+                <%= link_to "PgHero", "/pghero", target: "_blank", rel: "noopener", class: "block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+              </div>
+            <% end %>
+            <div class="px-2 py-3">
+              <p class="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wide">Account</p>
+              <%= link_to "Profile", profile_path, class: "block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+              <%= button_to "Log out", logout_path, method: :delete,
+                            class: "block w-full text-left rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50",
+                            form: { class: "block w-full" } %>
+            </div>
+          </div>
+        </details>
+      <% end %>
     </div>
   </nav>
 </header>

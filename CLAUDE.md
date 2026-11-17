@@ -54,7 +54,7 @@ Hybrid Rails 8.1 template combining a standard Rails app (controllers/views) wit
 **Background jobs**
 - Sidekiq with queues `%w[critical default mailers maintenance]`, concurrency 5. Redis URL from `REDIS_SIDEKIQ_URL` (default `redis://localhost:6379/1`).
 - `sidekiq-scheduler` config in `config/scheduler/production.yml`. Scheduled jobs live in `app/sidekiq/` (e.g. `pg/capture_query_stats_job.rb` for PgHero).
-- Active Job is routed to Sidekiq in development and production (`config.active_job.queue_adapter = :sidekiq`) and to the `:test` adapter in test; `deliver_later` mail goes to the `mailers` queue. Queues for `app/sidekiq/` jobs come from their `sidekiq_options`, not the scheduler YAML.
+- Active Job is routed to Sidekiq (`config.active_job.queue_adapter = :sidekiq` in `config/application.rb`), overridden to `:test` in `config/environments/test.rb`; `deliver_later` mail goes to the `mailers` queue. Queues for `app/sidekiq/` jobs come from their `sidekiq_options`, not the scheduler YAML.
 - Solid Queue is installed but opt-in (commented lines in the environment files; see README "Switching to Solid Queue"). Production Kamal runs Sidekiq as the `job` role with a `redis` accessory.
 - Development mail is delivered to Letter Opener Web at `/letter_opener`.
 

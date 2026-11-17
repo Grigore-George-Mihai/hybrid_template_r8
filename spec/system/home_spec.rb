@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Home page", bullet: false, type: :system do
-  let(:user) { create(:user, role: :admin) }
+  let(:user) { create(:user, :admin) }
 
   before { sign_in user }
 

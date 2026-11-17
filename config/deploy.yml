@@ -50,7 +50,7 @@ env:
   clear:
     # Sidekiq connects to the redis accessory over the Kamal docker network (container: <service>-redis).
     REDIS_SIDEKIQ_URL: redis://hybrid_template_r8-redis:6379/1
-    SIDEKIQ_CONCURRENCY: 5
+    # SIDEKIQ_CONCURRENCY: 5 # default from config/initializers/sidekiq.rb
 
     # --- Solid Queue (opt-in, see README "Switching to Solid Queue") ---
     # Run the Solid Queue supervisor inside the web server's Puma process (single-server setups).

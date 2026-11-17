@@ -11,17 +11,7 @@ RSpec.describe "Users::Registrations", type: :request do
   end
 
   describe "POST /users" do
-    let(:valid_params) do
-      {
-        user: {
-          first_name: "Jane",
-          last_name: "Doe",
-          email: "jane@example.com",
-          password: "Password123!",
-          password_confirmation: "Password123!"
-        }
-      }
-    end
+    let(:valid_params) { { user: attributes_for(:user).except(:role) } }
 
     context "with valid params" do
       it "creates a user and redirects to root" do

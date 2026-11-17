@@ -3,6 +3,10 @@
 class ApiRoot < Grape::API
   include ErrorHandler
 
+  # The API is stateless (JWT): never persist the Rails session, so no session cookie is sent
+  # even when middleware (e.g. the CSP nonce generator) touches it.
+  before { env[Rack::RACK_SESSION_OPTIONS][:skip] = true }
+
   mount V1::Api
 
   add_swagger_documentation(

@@ -156,7 +156,7 @@ rails generate grape_resource Book title:string description:text
 #### Switching to Solid Queue
 Solid Queue is installed but dormant. To route **Active Job** through it instead of Sidekiq:
 
-1. In `config/environments/development.rb` and/or `production.rb`, replace `config.active_job.queue_adapter = :sidekiq` with the commented Solid Queue lines right below it.
+1. In `config/application.rb`, replace `config.active_job.queue_adapter = :sidekiq` with the commented Solid Queue lines right below it (or override it in a single `config/environments/<env>.rb`).
 2. Make sure a `queue` database exists. Production already defines one in `config/database.yml`; for development add the same structure:
    ```yaml
    development:

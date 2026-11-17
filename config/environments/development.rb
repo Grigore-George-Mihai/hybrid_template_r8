@@ -31,14 +31,6 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Background jobs
-  config.active_job.queue_adapter = :sidekiq
-  # config.active_job.queue_adapter = :solid_queue
-  # config.solid_queue.connects_to = { database: { writing: :queue } }
-
-  # Route deliver_later mail to the `mailers` queue (load_defaults sets this to nil, i.e. the `default` queue).
-  config.action_mailer.deliver_later_queue_name = :mailers
-
   # Deliver mail to Letter Opener Web (browse it at /letter_opener).
   config.action_mailer.delivery_method = :letter_opener_web
 

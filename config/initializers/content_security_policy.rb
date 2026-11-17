@@ -15,16 +15,9 @@ Rails.application.configure do
     policy.connect_src :self, :https
   end
 
-  # Nonce for importmap/inline scripts (avoids unsafe-inline on script-src).
-  # Stable per session, not per request: the importmap tag is Turbo-tracked, so a nonce that changes
-  # on every response would force a full reload on each navigation. Stored in the session instead of
-  # using `request.session.id`, which is blank on a visitor's first request (empty nonce = scripts blocked)
-  # and changes when Devise rotates the session id on sign-in.
-  #
-  # Skipped for the Grape API: the CSP middleware runs on every response, and writing the session there
-  # would send a session cookie with every JSON response of the stateless JWT API.
-  config.content_security_policy_nonce_generator = lambda do |request|
-    request.session[:csp_nonce] ||= SecureRandom.base64(16) unless request.path.start_with?("/api/")
-  end
+  # Per-session nonce (the importmap tag is Turbo-tracked, so a per-request nonce would force full reloads).
+  # Stored in the session because `request.session.id` is blank on a first visit and rotates on sign-in.
+  # The Grape API skips persisting the session (ApiRoot), so this never sets a cookie on API responses.
+  config.content_security_policy_nonce_generator = ->(request) { request.session[:csp_nonce] ||= SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 end

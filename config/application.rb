@@ -23,5 +23,14 @@ module HybridTemplateR8
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Background jobs: Active Job runs on Sidekiq (test overrides this with :test).
+    # To use Solid Queue instead, see README "Switching to Solid Queue".
+    config.active_job.queue_adapter = :sidekiq
+    # config.active_job.queue_adapter = :solid_queue
+    # config.solid_queue.connects_to = { database: { writing: :queue } }
+
+    # Route deliver_later mail to the `mailers` queue (load_defaults sets this to nil, i.e. the `default` queue).
+    config.action_mailer.deliver_later_queue_name = :mailers
   end
 end

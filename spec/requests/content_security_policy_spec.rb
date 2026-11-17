@@ -30,7 +30,9 @@ RSpec.describe "Content Security Policy", type: :request do
 
   it "does not set a session cookie on API responses" do
     post "/api/v1/auth/login", params: { email: "nobody@example.com", password: "wrong" }
+    expect(response.headers["set-cookie"]).to be_blank
 
+    get "/swagger_doc"
     expect(response.headers["set-cookie"]).to be_blank
   end
 end

@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
 class ApiRoot < Grape::API
+  # The API is stateless (JWT): never persist the Rails session, so no session cookie is sent even when
+  # middleware (e.g. the CSP nonce generator) touches it. Grape runs `use` middleware before its versioner
+  # and formatter, so requests those reject (malformed body, bad Accept) are covered too.
+  class SkipSession
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      env[Rack::RACK_SESSION_OPTIONS]&.[]=(:skip, true)
+      @app.call(env)
+    end
+  end
+
   include ErrorHandler
 
-  # The API is stateless (JWT): never persist the Rails session, so no session cookie is sent
-  # even when middleware (e.g. the CSP nonce generator) touches it.
-  before { env[Rack::RACK_SESSION_OPTIONS][:skip] = true }
+  use SkipSession
 
   mount V1::Api
 

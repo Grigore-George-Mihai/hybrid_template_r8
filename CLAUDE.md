@@ -9,7 +9,7 @@ Hybrid Rails 8.1 template combining a standard Rails app (controllers/views) wit
 ## Common Commands
 
 **Development**
-- `bin/setup` — install gems, prepare DB, start dev server (Procfile.dev runs `rails server` + `tailwindcss:watch`)
+- `bin/setup` — install gems, prepare DB, start dev server (Procfile.dev runs `rails server`, `tailwindcss:watch` and a Sidekiq worker)
 - `bin/setup --skip-server` — same as above without launching the server
 - `bin/dev` — start the dev server (wraps `rails server`)
 - `bin/rails setup:rename_app` — rename the app module/DB/cable prefixes everywhere
@@ -55,16 +55,17 @@ Hybrid Rails 8.1 template combining a standard Rails app (controllers/views) wit
 - Sidekiq with queues `%w[critical default mailers maintenance]`, concurrency 5. Redis URL from `REDIS_SIDEKIQ_URL` (default `redis://localhost:6379/1`).
 - `sidekiq-scheduler` config in `config/scheduler/production.yml`. Scheduled jobs live in `app/sidekiq/` (e.g. `pg/capture_query_stats_job.rb` for PgHero).
 - Active Job is routed to Sidekiq (`config.active_job.queue_adapter = :sidekiq` in `config/application.rb`), overridden to `:test` in `config/environments/test.rb`; `deliver_later` mail goes to the `mailers` queue. Queues for `app/sidekiq/` jobs come from their `sidekiq_options`, not the scheduler YAML.
-- Solid Queue is installed but opt-in (commented lines in the environment files; see README "Switching to Solid Queue"). Production Kamal runs Sidekiq as the `job` role with a `redis` accessory.
+- Solid Queue is installed but opt-in (commented lines under the Sidekiq adapter in `config/application.rb`; see README "Switching to Solid Queue"). Production Kamal runs Sidekiq as the `job` role with a `redis` accessory.
 - Development mail is delivered to Letter Opener Web at `/letter_opener`.
 
 **Content Security Policy**
-- Enforced in `config/initializers/content_security_policy.rb` (`script-src 'self'` + nonce). The nonce is stored in the session so it is present on a visitor's first request and stable across sign-in. It is skipped for `/api/` paths so the stateless JWT API never gets a session cookie. Third-party scripts need their host added to `script-src`.
+- Enforced in `config/initializers/content_security_policy.rb` (`script-src 'self'` + nonce). The nonce is stored in the session so it is present on a visitor's first request and stable across sign-in. The Grape API never persists the session: `ApiRoot::SkipSession` (added with `use`, so it runs before Grape's formatter/versioner) sets the Rack session `skip` option, so no API response carries a session cookie. Third-party scripts need their host added to `script-src`.
 
 **Test setup**
 - `spec/rails_helper.rb` auto-requires everything in `spec/support/**/*.rb`. That directory wires up FactoryBot, Shoulda Matchers, Bullet, SimpleCov, Capybara, and `Sidekiq::Job.clear_all` before each example. Don't redeclare these per-spec.
 - Request specs get both helper sets: Devise's `sign_in user` (session, for web routes) and `HelpersConfig` (`spec/support/helpers_config.rb`) for the API: `api_sign_in(user)` returns a JWT, `authenticate_request(user)` returns the `Authorization` header, plus `response_body`.
 - System specs run in headless Chrome; tag a spec `:mobile` to run it at phone size (`spec/support/capybara_config.rb`).
+- Flash messages auto-close via `ApplicationHelper#flash_duration_for`; `config/environments/test.rb` sets `config.x.flash_duration` to 60s so system specs never race the auto-close.
 - Spec tree mirrors source: `spec/api/v1/...`, `spec/requests/`, `spec/system/`, `spec/sidekiq/pg/...`, `spec/models/`, `spec/helpers/`.
 
 ## Conventions

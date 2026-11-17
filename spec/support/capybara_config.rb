@@ -7,7 +7,10 @@ Capybara.enable_aria_label = true
 # Chrome's password manager / breach-detection bubble lives outside the page, survives Capybara's
 # per-example reset, and can steal focus from the next example's form after a sign-in with a
 # well-known test password ("Password123!"). Turn it off for the test browser.
+# --no-sandbox / --disable-dev-shm-usage let Chrome run as root and with Docker's small /dev/shm (containers, CI).
 CHROME_TEST_OPTIONS = lambda do |options|
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
   options.add_preference("credentials_enable_service", false)
   options.add_preference("profile.password_manager_enabled", false)
   options.add_preference("profile.password_manager_leak_detection", false)

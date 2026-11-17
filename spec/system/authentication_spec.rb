@@ -28,8 +28,8 @@ RSpec.describe "Authentication", type: :system do
     expect(page).to have_no_css("[role=alert]")
   end
 
-  # Clicking (not just finding) fails if the flash sits on top of the menu. The flash auto-closes
-  # after 3s (base--flash), so this runs straight after sign-in while it is still showing.
+  # Clicking (not just finding) fails if the flash sits on top of the menu
+  # (test.rb keeps flashes up via config.x.flash_duration, so it is still showing).
   it "signs out from the account menu while a flash message is showing" do
     sign_in_with_form(user)
     expect(page).to have_css("[role=alert]")

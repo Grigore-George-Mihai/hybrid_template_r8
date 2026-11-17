@@ -28,11 +28,16 @@ RSpec.describe "Auth API", type: :request do
       expect(response).to have_http_status(:created)
       expect(response_body[:auth]).to include(:token)
     end
+
+    it "ignores a role param and creates a regular user" do
+      post "/api/v1/auth/register", params: valid_attributes.merge(role: "admin")
+      expect(User.find_by(email: valid_attributes[:email])).to be_user
+    end
   end
 
   describe "DELETE /api/v1/auth/logout" do
     it "logs out the user and returns a 204 status" do
-      token = sign_in(valid_user)
+      token = api_sign_in(valid_user)
 
       delete "/api/v1/auth/logout", headers: { "Authorization" => "Bearer #{token}" }
       expect(response).to have_http_status(:no_content)

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   end
 
   mount GrapeSwaggerRails::Engine => "/swagger" if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   # Define root route
   root "home#index"

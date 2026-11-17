@@ -2,7 +2,10 @@
 
 namespace :setup do
   desc "Create .env.development/.env.test from their .template files (never overwrite)"
-  task copy_env: :environment do
+  # No :environment dependency: booting the app requires DEVISE_JWT_SECRET_KEY (config/initializers/dotenv.rb),
+  # which only exists once this task has created .env.development.
+  # rubocop:disable-next Rails/RakeEnvironment
+  task :copy_env do
     root = Rails.root
     pairs = {
       development: [root.join(".env.development.template"), root.join(".env.development")],

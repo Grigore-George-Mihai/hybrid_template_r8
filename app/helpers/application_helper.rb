@@ -15,7 +15,14 @@ module ApplicationHelper
 
   FLASH_DEFAULT_CLASS = "bg-gray-100 border-gray-400 text-gray-800"
 
+  # Problem flashes stay up longer. config.x.flash_duration (ms) overrides both, e.g. in test.
+  FLASH_LONG_TYPES = %i[error alert danger warning].freeze
+
   def tailwind_class_for(flash_type)
     FLASH_TAILWIND_CLASSES.fetch(flash_type.to_sym, FLASH_DEFAULT_CLASS)
+  end
+
+  def flash_duration_for(flash_type)
+    Rails.configuration.x.flash_duration || (FLASH_LONG_TYPES.include?(flash_type.to_sym) ? 6000 : 3000)
   end
 end

@@ -21,4 +21,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#flash_duration_for" do
+    before { allow(Rails.configuration.x).to receive(:flash_duration).and_return(nil) }
+
+    it "keeps problem flashes up longer" do
+      expect(helper.flash_duration_for("alert")).to eq(6000)
+      expect(helper.flash_duration_for(:notice)).to eq(3000)
+    end
+
+    it "uses config.x.flash_duration when set" do
+      allow(Rails.configuration.x).to receive(:flash_duration).and_return(60_000)
+      expect(helper.flash_duration_for(:notice)).to eq(60_000)
+    end
+  end
 end

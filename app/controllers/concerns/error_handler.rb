@@ -27,19 +27,14 @@ module ErrorHandler
       error!({ errors: { status: I18n.t("errors.bad_request"), code: 400, message: exception.message } }, 400)
     end
 
-    # JWT-specific errors from devise-jwt or plain JWT.
-    # JWT::VerificationError < JWT::DecodeError, so the decode handler covers it.
+    # JWT-specific errors from devise-jwt or plain JWT. JWT::VerificationError and devise-jwt's
+    # Warden::JWTAuth::Errors (NilUser, RevokedToken, WrongScope) subclass JWT::DecodeError,
+    # so the decode handler covers them.
     rescue_from JWT::ExpiredSignature do |_e|
       error!({ errors: { status: "Unauthorized", message: "Token has expired" } }, 401)
     end
 
     rescue_from JWT::DecodeError do |_e|
-      error!({ errors: { status: "Unauthorized", message: "Invalid token" } }, 401)
-    end
-
-    rescue_from Warden::JWTAuth::Errors::NilUser,
-                Warden::JWTAuth::Errors::RevokedToken,
-                Warden::JWTAuth::Errors::WrongScope do |_e|
       error!({ errors: { status: "Unauthorized", message: "Invalid token" } }, 401)
     end
 

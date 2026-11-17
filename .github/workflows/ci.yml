@@ -101,11 +101,10 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Setup Database
-        run: bin/rails db:setup
-
-      - name: Build Tailwind CSS
-        run: bin/rails tailwindcss:build
+      # db:test:prepare loads the schema without seeding (db:setup/db:prepare would seed the test DB).
+      # test:prepare builds Tailwind (app/assets/builds is not committed; the layout needs it).
+      - name: Prepare database and assets
+        run: bin/rails db:test:prepare test:prepare
 
       - name: Run RSpec tests
         run: bundle exec rspec

@@ -5,13 +5,12 @@ module ApiAuthHelpers
 
   # Grape helpers run inside the endpoint instance per request; instance variables
   # are the idiomatic way to memoize here. The cop below targets view helpers.
-  # rubocop:disable Rails/HelperInstanceVariable
+  # rubocop:disable-next Rails/HelperInstanceVariable
   def current_user
     return @current_user if defined?(@current_user)
 
     @current_user = decode_jwt_user
   end
-  # rubocop:enable Rails/HelperInstanceVariable
 
   def authenticate_user!
     error!("401 Unauthorized", 401) unless current_user

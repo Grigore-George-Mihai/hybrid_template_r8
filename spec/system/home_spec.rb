@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Home page", bullet: false, type: :system do
-  let(:user) { create(:user, role: :admin) }
+  let(:user) { create(:user, :admin) }
 
   before { sign_in user }
 
@@ -21,7 +21,7 @@ RSpec.describe "Home page", bullet: false, type: :system do
     find("summary", text: "Account").click
 
     expect(page).to have_link("Profile")
-    expect(page).to have_link("Swagger", visible: :hidden)
+    expect(page).to have_link("Sidekiq", visible: :hidden)
   end
 
   it "closes the open dropdown when clicking outside" do

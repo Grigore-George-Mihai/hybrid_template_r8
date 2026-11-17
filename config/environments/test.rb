@@ -28,6 +28,12 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  # Keep Active Job in-memory in tests (overrides the Sidekiq default in config/application.rb).
+  config.active_job.queue_adapter = :test
+
+  # Keep flash messages up for a minute so system specs never race the auto-close (ApplicationHelper#flash_duration_for).
+  config.x.flash_duration = 60_000
+
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 

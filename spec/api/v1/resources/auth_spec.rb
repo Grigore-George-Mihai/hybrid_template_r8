@@ -41,6 +41,14 @@ RSpec.describe "Auth API", type: :request do
       expect(response).to have_http_status(:no_content)
     end
 
+    it "rejects a token that was revoked by logging out" do
+      headers = authenticate_request(valid_user)
+      delete("/api/v1/auth/logout", headers:)
+
+      delete("/api/v1/auth/logout", headers:)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
     it "returns 401 if no token is provided" do
       delete "/api/v1/auth/logout"
       expect(response).to have_http_status(:unauthorized)

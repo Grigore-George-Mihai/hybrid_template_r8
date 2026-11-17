@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   config.after_initialize do
     next unless defined?(Bullet) && Rails.env.local?

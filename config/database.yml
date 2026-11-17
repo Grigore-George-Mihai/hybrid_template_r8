@@ -90,7 +90,7 @@ production:
     <<: *default
     database: hybrid_template_r8_production
     username: hybrid_template_r8
-    password: <%= ENV["DEFAULT_TEMPLATE_R8_DATABASE_PASSWORD"] %>
+    password: <%= ENV["HYBRID_TEMPLATE_R8_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
     database: hybrid_template_r8_production_cache
